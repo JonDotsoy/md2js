@@ -27,34 +27,67 @@ export let isHeader = function (str, nxtl = null) {
 }
 
 
+export let isBlockquote = function (str, nxtl) {
+	let math,
+		useNxtl = false
+
+	if (/\>(.+)/.exec(nxtl) !== null) useNxtl = true
+	if ((math = /\>(.+)/.exec(str)) !== null) return {literal: math[1].trim(), nxtl: useNxtl}
+
+	return null
+}
+
+
 /**
  * Busca dentro de multiples lineas los elementos que estos forman.
  */
 export let linesToElement = function * (lines) {
 	if (!Array.isArray(lines)) lines = [lines]
 
-	for (let indexLine in lines) {
+	for (let indexLine = 0; indexLine < lines.length; indexLine++) {
 		indexLine = Number(indexLine)
-		let line = String(lines[indexLine]).trim()
-		let prevLine = lines[indexLine - 1]; if (prevLine !== undefined) String(prevLine).trim()
-		let nextLine = lines[indexLine + 1]; if (nextLine !== undefined) String(nextLine).trim()
+		let line,
+			prevLine,
+			nextLine
 
-		// console.log({
-		// 	indexLine,
-		// 	line,
-		// 	prevLine,
-		// 	nextLine,
-		// })
+		let generated = () => {
+			line = String(lines[indexLine]).trim()
+			prevLine = lines[indexLine - 1]; if (prevLine !== undefined) String(prevLine).trim()
+			nextLine = lines[indexLine + 1]; if (nextLine !== undefined) String(nextLine).trim()
+		}
+		let proceed = (n = 1) => {
+			indexLine = indexLine + n
+			generated()
+			return indexLine
+		}
+
+		generated()
 
 		let element
 
 		if (element = isHeader(line, nextLine)) {
 			yield new Header(element.level, element.literal)
-			if (element.nxtl) indexLine = indexLine + 1
+			if (element.nxtl) proceed()
 		}
 		else
-		if (true) {
-			// yield line
+		if (element = isBlockquote(line, nextLine)) {
+			let literal = []
+
+			while (true) {
+				literal.push(element.literal)
+				if (element.nxtl === true) {
+					proceed()
+					element = isBlockquote(line, nextLine)
+				}
+				else break
+			}
+
+			yield new Blockquote(literal)
+		}
+
+		else
+		if (line !== '') {
+			yield new Inline(line)
 		}
 
 	}
@@ -87,8 +120,7 @@ export class Header {
 	constructor (level, inner) {
 		this['$type$'] = 'Header'
 		this.level = level
-		this.inner = inner
-		// this.inner = parseInner(inner)
+		this.inner = parseInner(inner)
 	}
 }
 
@@ -96,10 +128,26 @@ export class Header {
 export class Link {
 	constructor () {
 		this['$type$'] = 'Link'
-		this.title = 'abc'
-		this.href = '//abc'
+		// this.title = 'abc'
+		// this.href = '//abc'
 	}
 
+}
+
+
+export class Blockquote {
+	constructor (inner) {
+		this['$type$'] = 'Blockquote'
+		this.inner = parseInner(inner)
+	}
+}
+
+
+export class Inline {
+	constructor (inner) {
+		this['$type$'] = 'Inline'
+		this.inner = inner
+	}
 }
 
 
