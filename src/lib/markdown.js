@@ -1,25 +1,27 @@
 import 'babel-polyfill'
 
-let isHeader = function (str, nxtl = null) {
+
+
+export let isHeader = function (str, nxtl = null) {
 	let math
 	str = str.trim()
 	if (nxtl !== null) nxtl = nxtl.trim()
 
-	// title 3
+	// Title with close
+	math = /^(\#+)(.+?)(\#{0,})$/.exec(str)
+	if (!(math === null) && math[1].length <= 6) return {literal: math[2].trim(), level: math[1].length}
+
+	// Title simple level 1
 	math = /^\=+$/.exec(nxtl)
-	if (!(math === null)) return {literal: str.trim(), level: 1}
+	if (!(math === null)) return {literal: str.trim(), level: 1, nxtl:true}
 
-	// title 4
+	// Title simple level 2
 	math = /^\-+$/.exec(nxtl)
-	if (!(math === null)) return {literal: str.trim(), level: 2}
+	if (!(math === null)) return {literal: str.trim(), level: 2, nxtl:true}
 
-	// Title 2
-	math = /^(\#+)(.+)(\#+)$/.exec(str)
-	if (!(math === null)) return {literal: math[2].trim(), level: math[1].length}
-
-	// Title 1
-	math = /^(\#+)(.+)$/.exec(str)
-	if (!(math === null)) return {literal: math[2].trim(), level: math[1].length}
+	// Title Simple
+	// math = /^(\#+)(.+)$/.exec(str)
+	// if (!(math === null) && math[1].length <= 6) return {literal: math[2].trim(), level: math[1].length}
 
 	return null
 }
@@ -28,7 +30,7 @@ let isHeader = function (str, nxtl = null) {
 /**
  * Busca dentro de multiples lineas los elementos que estos forman.
  */
-let linesToElement = function * (lines) {
+export let linesToElement = function * (lines) {
 	if (!Array.isArray(lines)) lines = [lines]
 
 	for (let indexLine in lines) {
@@ -48,6 +50,7 @@ let linesToElement = function * (lines) {
 
 		if (element = isHeader(line, nextLine)) {
 			yield new Header(element.level, element.literal)
+			if (element.nxtl) indexLine = indexLine + 1
 		}
 		else
 		if (true) {
@@ -57,7 +60,7 @@ let linesToElement = function * (lines) {
 	}
 }
 
-let parseInner = function (innerIn) {
+export let parseInner = function (innerIn) {
 	let inner = []
 
 	let lines = linesToElement(innerIn)

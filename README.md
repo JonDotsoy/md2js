@@ -1,6 +1,5 @@
 # md2js
 
-
 > ## Install
 
 Install with [npm](https://www.npmjs.com/)
