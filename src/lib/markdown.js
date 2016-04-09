@@ -87,7 +87,7 @@ export let linesToElement = function * (lines) {
 
 		else
 		if (line !== '') {
-			yield new Inline(line)
+			yield new Block(line)
 		}
 
 	}
@@ -143,9 +143,9 @@ export class Blockquote {
 }
 
 
-export class Inline {
+export class Block {
 	constructor (inner) {
-		this['$type$'] = 'Inline'
+		this['$type$'] = 'Block'
 		this.inner = inner
 	}
 }
