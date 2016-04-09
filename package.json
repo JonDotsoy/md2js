@@ -1,0 +1,28 @@
+{
+  "name": "md2js",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "md2js": "bin/cli.js"
+  },
+  "scripts": {
+    "prepublish": "npm run-script build",
+    "build": "node_modules/.bin/babel --out-dir=./ src/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonDotsoy/md2js.git"
+  },
+  "author": "Jon Dotsoy <hi@jon.soy> (http://jon.soy/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JonDotsoy/md2js/issues"
+  },
+  "homepage": "https://github.com/JonDotsoy/md2js#readme",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.7.5"
+  }
+}
