@@ -57,7 +57,7 @@ export let linesToElement = function * (lines) {
 		if (element = isList(line, nextLine)) {
 			let list
 			if (element.nxtl === true) {
-
+				
 			}
 			yield element
 		}
