@@ -10,8 +10,10 @@ export let isList = function (str, nxtl) {
 	if (math = regFind.exec(str)) {
 		let {1:spaces,2:bulleted,4:numbered,5:literal} = math
 		if (numbered) numbered = Number(numbered)
+		if (regFind.exec(str)) useNxtl = true
 
-		return {spaces,bulleted,numbered,literal}
+
+		return {spaces,bulleted,numbered,literal, nxtl:useNxtl}
 	}
 
 	return null
