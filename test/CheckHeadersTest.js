@@ -1,4 +1,4 @@
-var markdown = require('../lib/markdown')
+var markdown = require('md2js/lib/markdown')
 var loremIpsum = require('lorem-ipsum')
 
 
